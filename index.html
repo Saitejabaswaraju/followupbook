@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Driver Follow-up Book</title>
+<style>
+:root{
+  --bg:#f2f4f7; --surface:#fff; --text:#16202b; --muted:#62707f; --line:#e1e6ec; --tint:#eef3fa;
+  --primary:#1457b8; --on-primary:#fff; --green:#13824a; --blue:#0b7a99; --amber:#b86e00; --red:#c62828;
+  --amber-bg:#fff4dc; --green-bg:#e7f6ee; --blue-bg:#e3f3f8; --red-bg:#fde9e9;
+  --r:12px; --r-sm:8px; --hdr-h:64px;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151a; --surface:#1a2027; --text:#e8edf2; --muted:#98a4b1; --line:#2a323b; --tint:#202a36;
+    --primary:#5b9dff; --on-primary:#0b1420; --green:#4cc38a; --blue:#4cb8d6; --amber:#f0b04a; --red:#ff7b7b;
+    --amber-bg:#33290f; --green-bg:#10301f; --blue-bg:#0e2a33; --red-bg:#381819;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10151a; --surface:#1a2027; --text:#e8edf2; --muted:#98a4b1; --line:#2a323b; --tint:#202a36;
+  --primary:#5b9dff; --on-primary:#0b1420; --green:#4cc38a; --blue:#4cb8d6; --amber:#f0b04a; --red:#ff7b7b;
+  --amber-bg:#33290f; --green-bg:#10301f; --blue-bg:#0e2a33; --red-bg:#381819;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--text); font-size:15px; line-height:1.4;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  -webkit-tap-highlight-color:transparent;
+}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+/* ---------- Header (mobile first) ---------- */
+.top{background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.top-in{display:grid;gap:10px;padding:12px 14px;max-width:1280px;margin:0 auto}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{flex:none;width:36px;height:36px;border-radius:9px;background:var(--primary);color:var(--on-primary);display:grid;place-items:center}
+.org{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font-size:16px;line-height:1.2;font-weight:700}
+#clock{flex:none;font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;color:var(--primary);background:var(--tint);padding:6px 10px;border-radius:var(--r-sm)}
+.search{position:relative}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+#search{
+  width:100%;height:44px;padding:0 12px 0 38px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--bg);color:var(--text);font-size:16px;
+}
+#search::placeholder{color:var(--muted)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{
+  min-height:44px;padding:0 14px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface);
+  font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  text-decoration:none;color:var(--text);transition:background .12s,border-color .12s;
+}
+.btn:hover{background:var(--tint)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.on{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.btn.call{background:var(--green);border-color:var(--green);color:#fff}
+.btn.call:hover{filter:brightness(1.08)}
+.btn.done-called{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.btn.done-arrived{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.btn.warn{border-color:var(--red);color:var(--red)}
+.btn.warn:hover{background:var(--red-bg)}
+.btn.amber{border-color:var(--amber);color:var(--amber)}
+.btn.amber:hover{background:var(--amber-bg)}
+.btn.danger{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ---------- Content ---------- */
+main{max-width:1280px;margin:0 auto}
+#loadStatus{padding:10px 14px 0;font-size:12.5px;color:var(--muted)}
+.empty{padding:48px 16px;text-align:center;color:var(--muted)}
+
+/* ---------- Cards (mobile + tablet) ---------- */
+.cards{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding:12px 14px 28px}
+.card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;min-width:0}
+.card.alerted{border-left-color:var(--amber);background:linear-gradient(0deg,var(--amber-bg),var(--amber-bg)) ,var(--surface)}
+.card.called{border-left-color:var(--green)}
+.card.arrived{border-left-color:var(--blue)}
+.card.absent{border-left-color:var(--red)}
+.card.wentback{border-left-color:var(--amber)}
+.c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.c-head>div:first-child{min-width:0}
+.svc{font-size:20px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.who{margin-top:3px;font-size:14px;color:var(--text);overflow-wrap:anywhere}
+.who span{color:var(--muted)}
+.repl{margin-top:4px;font-size:12.5px;color:var(--red);overflow-wrap:anywhere}
+.badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;line-height:1;padding:5px 9px;border-radius:999px;background:var(--tint);color:var(--muted);white-space:nowrap}
+.badge.soon{background:var(--amber-bg);color:var(--amber)}
+.badge.due{background:var(--red);color:#fff}
+.badge.called{background:var(--green-bg);color:var(--green)}
+.badge.arrived{background:var(--blue-bg);color:var(--blue)}
+.badge.absent{background:var(--red-bg);color:var(--red)}
+.badge.wentback{background:var(--amber-bg);color:var(--amber)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--text);font-weight:600;letter-spacing:.02em}
+.times{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 0}
+.times div{background:var(--tint);border-radius:var(--r-sm);padding:8px 6px;text-align:center}
+.times dt{font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.times dd{margin:2px 0 0;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.times .rt dd{color:var(--primary)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.actions .call{grid-column:1/-1}
+.actions2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+
+/* ---------- Table (desktop) ---------- */
+.tablewrap{display:none}
+table{border-collapse:separate;border-spacing:0;width:100%}
+th,td{padding:10px 12px;text-align:left;font-size:13.5px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{position:sticky;top:calc(var(--hdr-h) + env(safe-area-inset-top,0px));z-index:5;background:var(--surface);color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+td{background:var(--surface);font-variant-numeric:tabular-nums}
+td.svc-c{font-weight:700}
+tbody tr:hover td{background:var(--tint)}
+tr.alerted td{background:var(--amber-bg)}
+tr.called td{background:var(--green-bg)}
+tr.arrived td{background:var(--blue-bg)}
+tr.absent td{background:var(--red-bg)}
+tr.wentback td{background:var(--amber-bg)}
+td.act{white-space:nowrap}
+td.act .btn{min-height:36px;padding:0 12px;font-size:13px;margin-right:6px}
+td.act .btn:last-child{margin-right:0}
+td .repl{margin:2px 0 0}
+
+/* ---------- Modal ---------- */
+.ov{position:fixed;inset:0;z-index:100;background:rgba(10,16,24,.55);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.ov[hidden]{display:none}
+.sheet{
+  width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--surface);color:var(--text);
+  border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 24px rgba(0,0,0,.25);
+}
+.sheet h2{margin:0 0 10px;font-size:18px}
+.minfo{background:var(--tint);border-radius:var(--r-sm);padding:10px 12px;font-size:14px;margin-bottom:12px;overflow-wrap:anywhere}
+.minfo b{font-weight:700}
+.sheet label{display:block;margin:12px 0 4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.sheet input,.sheet textarea{
+  width:100%;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--bg);color:var(--text);font-size:16px;
+}
+.sheet textarea{resize:vertical}
+.row{display:flex;gap:8px}
+.row input{flex:1;min-width:0}
+.hint{margin-top:6px;font-size:13px;color:var(--muted)}
+.hint.ok{color:var(--green)}
+.hint.bad{color:var(--red)}
+.err{margin-top:10px;font-size:13.5px;color:var(--red);font-weight:600}
+.mact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+
+@media (min-width:420px){
+  .actions{grid-template-columns:repeat(3,1fr)}
+  .actions .call{grid-column:auto}
+  .actions.nocall{grid-template-columns:1fr 1fr}
+}
+@media (min-width:640px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ov{align-items:center;padding:16px}
+  .sheet{border-radius:16px}
+}
+@media (min-width:900px){
+  .top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px)}
+  .top-in{display:flex;align-items:center;gap:16px;height:var(--hdr-h);padding:0 20px}
+  .brandrow{flex:none;gap:18px}
+  .search{flex:1;min-width:200px}
+  .btns{flex:none;display:flex}
+  .cards{display:none}
+  .tablewrap{display:block;padding:0 20px 32px}
+  #loadStatus{padding:12px 20px 8px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brandrow">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M4 11h16M8 21v-4M16 21v-4"/><circle cx="8" cy="14" r=".6"/><circle cx="16" cy="14" r=".6"/></svg></span>
+        <div><div class="org">Chakra E-Trans</div><h1>Driver Follow-up Book</h1></div>
+      </div>
+      <span id="clock" aria-live="off">--:--:--</span>
+    </div>
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Search service, reg no, emp ID, name, phone" inputmode="search" autocomplete="off" aria-label="Search drivers">
+    </div>
+    <div class="btns">
+      <button class="btn" id="enableBtn" type="button">Enable Alerts</button>
+      <button class="btn primary" id="refreshBtn" type="button">Refresh</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="loadStatus" role="status"></div>
+  <section class="cards" id="cards" aria-label="Driver duties"></section>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Serv No</th><th>Driver RT</th><th>Sch Dept</th><th>Sch Arvl</th>
+          <th>Reg No</th><th>Emp ID</th><th>Emp Name</th><th>Phone</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div id="emptyMsg" class="empty" style="display:none">No schedule loaded.</div>
+</main>
+
+<!-- Absent / Went-back dialog -->
+<div class="ov" id="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h2 id="mTitle"></h2>
+    <div class="minfo" id="mInfo"></div>
+
+    <div id="repBox">
+      <label for="repId">New driver ID</label>
+      <div class="row">
+        <input id="repId" type="text" inputmode="text" autocomplete="off" placeholder="Enter replacement driver ID">
+        <button type="button" class="btn primary" id="repFetch">Load</button>
+      </div>
+      <div class="hint" id="repStatus">Enter the ID and tap Load to fetch name and phone.</div>
+      <label for="repName">Name</label>
+      <input id="repName" type="text" autocomplete="off">
+      <label for="repPhone">Phone</label>
+      <input id="repPhone" type="tel" inputmode="tel" autocomplete="off">
+    </div>
+
+    <label for="mNote" id="noteLabel">Note (optional)</label>
+    <textarea id="mNote" rows="2" placeholder=""></textarea>
+
+    <div class="err" id="mErr" role="alert"></div>
+    <div class="mact">
+      <button type="button" class="btn" id="mCancel">Cancel</button>
+      <button type="button" class="btn danger" id="mConfirm">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Schedule + Absent storage (Apps Script bound to the duty-chart spreadsheet) */
+const SHEET_URL  = 'https://script.google.com/macros/s/AKfycbxZ6LVEAIJZMSbUaEczU4pAb9Reno9WLhdHnnqEdCuar-ooTGwUyLu7_qCeceiUMRC1ow/exec';
+/* Driver master (lookup by driver ID) */
+const DRIVER_URL = 'https://script.google.com/macros/s/AKfycby8JhNak3GslMmDvbfSxeu8hRUaJC3Sq81WeC2eY83mQWqBPQWCJi8m2MxSgeLx2e5v/exec';
+
+let data = [];
+const absentMap = {};            // slotId -> saved absent / went-back record for today
+const alerted = new Set(), called = new Set(), arrived = new Set();
+let audioCtx = null;
+
+const cardsEl = document.getElementById('cards');
+const tbody = document.getElementById('tbody');
+const emptyMsg = document.getElementById('emptyMsg');
+const loadStatus = document.getElementById('loadStatus');
+const searchEl = document.getElementById('search');
+const ICON_CALL = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>';
+
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function todayKey(){ return new Date().toDateString(); }
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/** Accepts "HH:MM", "HH:MM:SS", or ISO strings Sheets may return */
+function parseT(val){
+  if (val == null || val === '' || val === '–' || val === '-') return null;
+  const s = String(val).trim();
+  const iso = s.match(/^(\d{4})-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})/);
+  if (iso){
+    let t = (+iso[2])*3600 + (+iso[3])*60 + (+iso[4]);
+    // Sheets time-only cells arrive as 1899 dates in UTC; India's 1899 offset was +5:21:10
+    if (+iso[1] < 1900) t += 5*3600 + 21*60 + 10;
+    return Math.round(t/60) % 1440;
+  }
+  const parts = s.split(':');
+  if (parts.length >= 2){
+    let h = parseInt(parts[0],10); const m = parseInt(parts[1],10);
+    if (/pm/i.test(s) && h < 12) h += 12; else if (/am/i.test(s) && h === 12) h = 0;
+    if (!isNaN(h) && !isNaN(m)) return h*60 + m;
+  }
+  return null;
+}
+function timeDisplay(val){
+  const mins = parseT(val);
+  if (mins === null) return '—';
+  return String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');
+}
+function nextOccurrence(mins){
+  const now = new Date(), target = new Date(now);
+  target.setHours(Math.floor(mins/60), mins%60, 0, 0);
+  if (target - now < -60*1000) target.setDate(target.getDate()+1);
+  return target;
+}
+function fmt(d){ return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+
+function beep(){
+  try{
+    if (!audioCtx) return;
+    for (let i=0;i<3;i++){
+      const t0 = audioCtx.currentTime + i*0.35;
+      const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+      osc.type='sine'; osc.frequency.value=880;
+      gain.gain.setValueAtTime(0.0001,t0);
+      gain.gain.exponentialRampToValueAtTime(0.5,t0+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001,t0+0.25);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(t0); osc.stop(t0+0.3);
+    }
+  }catch(e){}
+}
+
+/** Sheets turns text like 7001/02 into a date; rebuild it as yyyy/mm */
+function cleanReg(v){
+  if (v == null) return '';
+  const s = String(v).trim();
+  const m = s.match(/^(\d{4}-\d{2}-\d{2})T/);
+  if (!m) return s;
+  const d = new Date(new Date(s).getTime() + 330*60000);
+  if (d.getUTCFullYear() >= 7000) return d.getUTCFullYear()+'/'+String(d.getUTCMonth()+1).padStart(2,'0');
+  return m[1]; // unrecoverable date: shown as-is so it can be fixed in the sheet
+}
+
+/** Sheet columns: servNo, driverRT, schDept, schArvl, regNo, empId, empName, phone */
+function normalizeRow(raw, idx){
+  return {
+    slotId : raw.slotId || ('row_'+idx),
+    servNo : raw.servNo  != null ? String(raw.servNo).trim()  : '',
+    driverRT: raw.driverRT != null ? raw.driverRT : '',
+    schDept: raw.schDept != null ? raw.schDept : '',
+    schArvl: raw.schArvl != null ? raw.schArvl : '',
+    regNo  : cleanReg(raw.regNo),
+    empId  : raw.empId   != null ? String(raw.empId).trim()   : '',
+    empName: raw.empName != null ? String(raw.empName).trim() : '',
+    phone  : raw.phone   != null ? String(raw.phone).replace(/\s+/g,'') : ''
+  };
+}
+
+function statusOf(r){
+  const mins = parseT(r.driverRT);
+  if (mins === null) return {cls:'', text:'—'};
+  const diffMin = Math.round((nextOccurrence(mins) - new Date())/60000);
+  if (diffMin <= 0) return {cls:'due', text:'Due'};
+  if (diffMin <= 30) return {cls:'soon', text:diffMin+'m left'};
+  return {cls:'', text:fmt(nextOccurrence(mins))};
+}
+
+function render(filter){
+  const f = (filter || '').toLowerCase().trim();
+  let cards = '', rows = '', visible = 0;
+
+  data.forEach((r, idx) => {
+    const ab = absentMap[r.slotId];
+    if (f && ![r.servNo, r.regNo, r.empId, r.empName, r.phone, ab && ab.absentEmpId, ab && ab.absentName]
+        .some(v => String(v == null ? '' : v).toLowerCase().includes(f))) return;
+    visible++;
+
+    const alertKey = todayKey()+'|A|'+r.slotId;
+    const callKey  = todayKey()+'|C|'+r.slotId;
+    const arriveKey= todayKey()+'|R|'+r.slotId;
+    const isCalled = called.has(callKey), isArrived = arrived.has(arriveKey);
+    const st = statusOf(r);
+    const isWent = ab && ab.type === 'Went Back';
+    const isAbs  = ab && ab.type === 'Absent';
+    const state = (alerted.has(alertKey) ? 'alerted ' : '') +
+      (isWent ? 'wentback' : isAbs ? 'absent' : isArrived ? 'arrived' : isCalled ? 'called' : '');
+
+    const callBtn = r.phone ? `<a class="btn call" href="tel:${esc(r.phone)}">${ICON_CALL}Call</a>` : '';
+    const calledBtn = `<button type="button" class="btn ${isCalled?'done-called':''}" data-act="call" data-key="${callKey}">${isCalled?'✓ Called':'Mark Called'}</button>`;
+    const arriveBtn = `<button type="button" class="btn ${isArrived?'done-arrived':''}" data-act="arrive" data-key="${arriveKey}">${isArrived?'✓ Arrived':'Driver Came'}</button>`;
+    const absentBtn = `<button type="button" class="btn warn" data-act="absent" data-slot="${esc(r.slotId)}">${isAbs?'Change Absent':'Absent'}</button>`;
+    const wentBtn   = `<button type="button" class="btn amber" data-act="wentback" data-slot="${esc(r.slotId)}">${isWent?'✓ Went Back':'Went Back (No Bus)'}</button>`;
+
+    let stateBadge = isArrived ? '<span class="badge arrived">Arrived</span>' : isCalled ? '<span class="badge called">Called</span>' : '';
+    if (isAbs)  stateBadge = '<span class="badge absent">'+(ab.newEmpId ? 'Replaced' : 'Absent')+'</span>' + stateBadge;
+    if (isWent) stateBadge = '<span class="badge wentback">Went back</span>' + stateBadge;
+
+    let repl = '';
+    if (isAbs) repl = `Absent: ${esc(ab.absentName || '—')} · ID ${esc(ab.absentEmpId || '—')}`;
+    if (isWent) repl = `Went back${ab.note ? ' — '+esc(ab.note) : ' (no bus)'}`;
+    const replHtml = repl ? `<div class="repl">${repl}</div>` : '';
+
+    cards += `
+<article class="card ${state}">
+  <div class="c-head">
+    <div><div class="svc">${esc(r.servNo) || '—'}</div>
+    <div class="who">${esc(r.empName) || '—'} <span>· ID ${esc(r.empId) || '—'}</span></div>${replHtml}</div>
+    <div class="badges"><span class="badge ${st.cls}">${st.text}</span>${stateBadge}</div>
+  </div>
+  <div class="meta"><span>Reg No <b>${esc(r.regNo) || '—'}</b></span>${r.phone ? `<span>${esc(r.phone)}</span>` : ''}</div>
+  <dl class="times">
+    <div class="rt"><dt>Driver RT</dt><dd>${timeDisplay(r.driverRT)}</dd></div>
+    <div><dt>Sch Dept</dt><dd>${timeDisplay(r.schDept)}</dd></div>
+    <div><dt>Sch Arvl</dt><dd>${timeDisplay(r.schArvl)}</dd></div>
+  </dl>
+  <div class="actions ${r.phone?'':'nocall'}">${callBtn}${calledBtn}${arriveBtn}</div>
+  <div class="actions2">${absentBtn}${wentBtn}</div>
+</article>`;
+
+    rows += `
+<tr class="${state}">
+  <td>${idx+1}</td>
+  <td class="svc-c">${esc(r.servNo) || '—'}</td>
+  <td>${timeDisplay(r.driverRT)}</td>
+  <td>${timeDisplay(r.schDept)}</td>
+  <td>${timeDisplay(r.schArvl)}</td>
+  <td>${esc(r.regNo) || '—'}</td>
+  <td>${esc(r.empId) || '—'}</td>
+  <td>${esc(r.empName) || '—'}${replHtml}</td>
+  <td>${esc(r.phone) || '—'}</td>
+  <td><span class="badge ${st.cls}">${st.text}</span> ${stateBadge}</td>
+  <td class="act">${callBtn}${calledBtn}${arriveBtn}${absentBtn}${wentBtn}</td>
+</tr>`;
+  });
+
+  cardsEl.innerHTML = cards;
+  tbody.innerHTML = rows;
+
+  emptyMsg.style.display = (data.length === 0 || visible === 0) ? 'block' : 'none';
+  if (data.length && visible === 0) emptyMsg.textContent = 'No matching rows.';
+  else if (data.length === 0) emptyMsg.textContent = 'No schedule loaded for today.';
+}
+
+/* ---------- Driver lookup (by driver ID) ---------- */
+const norm = k => String(k).toLowerCase().replace(/[^a-z0-9]/g,'');
+const ID_KEYS    = ['empid','employeeid','driverid','drvid','id','empno','employeeno','empcode','code'];
+const NAME_KEYS  = ['empname','employeename','drivername','name','drvname','fullname'];
+const PHONE_KEYS = ['phone','phoneno','phonenumber','mobile','mobileno','mobilenumber','contact','contactno','cell'];
+
+function pick(obj, keys){
+  const m = {};
+  Object.keys(obj).forEach(k => { m[norm(k)] = obj[k]; });
+  for (const k of keys){ if (m[k] != null && String(m[k]).trim() !== '') return m[k]; }
+  return '';
+}
+function toRecords(json){
+  if (Array.isArray(json)) return json.filter(x => x && typeof x === 'object');
+  if (json && typeof json === 'object'){
+    for (const k of ['rows','data','drivers','result','driver']){
+      if (json[k]) { const r = toRecords(json[k]); if (r.length) return r; }
+    }
+    if (pick(json, ID_KEYS) !== '' || pick(json, NAME_KEYS) !== '') return [json];
+  }
+  return [];
+}
+function matchDriver(json, id){
+  const want = String(id).trim().toLowerCase();
+  const rec = toRecords(json).find(o => String(pick(o, ID_KEYS)).trim().toLowerCase() === want);
+  if (!rec) return null;
+  return {
+    empId: String(pick(rec, ID_KEYS)).trim(),
+    name : String(pick(rec, NAME_KEYS)).trim(),
+    phone: String(pick(rec, PHONE_KEYS)).replace(/\s+/g,'')
+  };
+}
+let driverListCache = null;
+async function lookupDriver(id){
+  const q = encodeURIComponent(id);
+  // 1) direct lookups by ID
+  const direct = [
+    DRIVER_URL+'?action=getDriver&empId='+q+'&driverId='+q+'&id='+q,
+    DRIVER_URL+'?action=driver&empId='+q+'&driverId='+q+'&id='+q
+  ];
+  for (const u of direct){
+    try{
+      const res = await fetch(u);
+      if (!res.ok) continue;
+      const hit = matchDriver(await res.json(), id);
+      if (hit) return hit;
+    }catch(e){}
+  }
+  // 2) full driver list, filtered here
+  try{
+    if (!driverListCache){
+      const res = await fetch(DRIVER_URL+'?action=list&type=drivers');
+      if (res.ok) driverListCache = await res.json();
+    }
+    if (driverListCache){
+      const hit = matchDriver(driverListCache, id);
+      if (hit) return hit;
+    }
+  }catch(e){}
+  return null;
+}
+
+/* ---------- Absent / Went-back dialog ---------- */
+const modal = document.getElementById('modal');
+const el = id => document.getElementById(id);
+let mState = null; // {mode:'absent'|'wentback', row}
+
+function openModal(mode, slotId){
+  const row = data.find(r => r.slotId === slotId);
+  if (!row) return;
+  mState = {mode, row};
+  const isAbs = mode === 'absent';
+  el('mTitle').textContent = isAbs ? 'Mark driver absent' : 'Driver went back (no bus)';
+  el('mInfo').innerHTML =
+    `Service <b>${esc(row.servNo)||'—'}</b> · Reg <b>${esc(row.regNo)||'—'}</b><br>` +
+    `${isAbs ? 'Absent driver' : 'Driver'}: <b>${esc(row.empName)||'—'}</b> · ID ${esc(row.empId)||'—'}` +
+    (row.phone ? ` · ${esc(row.phone)}` : '');
+  el('repBox').style.display = isAbs ? '' : 'none';
+  el('repId').value = ''; el('repName').value = ''; el('repPhone').value = '';
+  setRepStatus('Enter the ID and tap Load to fetch name and phone.', '');
+  el('mNote').value = '';
+  el('mNote').placeholder = isAbs ? 'Reason for absence' : 'e.g. bus not available / breakdown';
+  el('mErr').textContent = '';
+  el('mConfirm').textContent = isAbs ? 'Save absent' : 'Save went back';
+  el('mConfirm').disabled = false;
+  modal.hidden = false;
+  setTimeout(() => (isAbs ? el('repId') : el('mNote')).focus(), 50);
+}
+function closeModal(){ modal.hidden = true; mState = null; }
+function setRepStatus(msg, cls){ const s = el('repStatus'); s.textContent = msg; s.className = 'hint ' + cls; }
+
+async function fetchReplacement(){
+  const id = el('repId').value.trim();
+  if (!id){ setRepStatus('Enter a driver ID first.', 'bad'); return; }
+  const btn = el('repFetch');
+  btn.disabled = true; setRepStatus('Looking up driver '+id+'…', '');
+  try{
+    const d = await lookupDriver(id);
+    if (d){
+      el('repName').value = d.name;
+      el('repPhone').value = d.phone;
+      setRepStatus('Loaded: '+(d.name || id)+(d.phone ? ' · '+d.phone : ''), 'ok');
+    } else {
+      el('repName').value = ''; el('repPhone').value = '';
+      setRepStatus('Driver ID not found. Check the ID, or type name and phone manually.', 'bad');
+    }
+  }catch(e){
+    setRepStatus('Lookup failed: '+(e.message || e), 'bad');
+  }finally{ btn.disabled = false; }
+}
+
+async function saveRecord(){
+  if (!mState) return;
+  const {mode, row} = mState;
+  const isAbs = mode === 'absent';
+  const newId = isAbs ? el('repId').value.trim() : '';
+  const newName = isAbs ? el('repName').value.trim() : '';
+  const newPhone = isAbs ? el('repPhone').value.replace(/\s+/g,'') : '';
+  if (isAbs && newId && !newName){
+    el('mErr').textContent = 'Load the new driver (or type the name) before saving.'; return;
+  }
+  const rec = {
+    type: isAbs ? 'Absent' : 'Went Back',
+    slotId: row.slotId, servNo: row.servNo, regNo: row.regNo,
+    driverRT: timeDisplay(row.driverRT), schDept: timeDisplay(row.schDept), schArvl: timeDisplay(row.schArvl),
+    absentEmpId: row.empId, absentName: row.empName, absentPhone: row.phone,
+    newEmpId: newId, newName: newName, newPhone: newPhone,
+    note: el('mNote').value.trim(),
+    savedAt: new Date().toLocaleString('en-CA', {hour12:false}).replace(',', '')
+  };
+  const btn = el('mConfirm');
+  btn.disabled = true; btn.textContent = 'Saving…'; el('mErr').textContent = '';
+  try{
+    const res = await fetch(SHEET_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'saveAbsent', date: todayISO(), record: rec})
+    });
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    absentMap[row.slotId] = rec;
+    if (isAbs && newId){
+      row.empId = newId; row.empName = newName; row.phone = newPhone;
+    }
+    closeModal();
+    render(searchEl.value);
+  }catch(err){
+    el('mErr').textContent = 'Could not save: '+(err.message || err);
+    btn.disabled = false;
+    btn.textContent = isAbs ? 'Save absent' : 'Save went back';
+  }
+}
+
+el('repFetch').addEventListener('click', fetchReplacement);
+el('repId').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); fetchReplacement(); } });
+el('mCancel').addEventListener('click', closeModal);
+el('mConfirm').addEventListener('click', saveRecord);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+// One delegated handler for card / table buttons
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const act = btn.dataset.act;
+  if (act === 'absent' || act === 'wentback'){ openModal(act, btn.dataset.slot); return; }
+  const set = act === 'call' ? called : arrived;
+  const k = btn.dataset.key;
+  set.has(k) ? set.delete(k) : set.add(k);
+  render(searchEl.value);
+});
+
+function tick(){
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+  data.forEach(r => {
+    if (absentMap[r.slotId] && absentMap[r.slotId].type === 'Went Back') return;
+    const mins = parseT(r.driverRT);
+    if (mins === null) return;
+    const diffMin = Math.round((nextOccurrence(mins) - new Date())/60000);
+    const alertKey = todayKey()+'|A|'+r.slotId;
+    if (diffMin === 30 && !alerted.has(alertKey)){ alerted.add(alertKey); beep(); }
+  });
+  render(searchEl.value);
+}
+
+async function loadAbsent(date){
+  try{
+    const res = await fetch(SHEET_URL+'?action=listAbsent&date='+encodeURIComponent(date));
+    if (!res.ok) return;
+    const json = await res.json();
+    Object.keys(absentMap).forEach(k => delete absentMap[k]);
+    (json.rows || []).forEach(r => {
+      const prev = absentMap[r.slotId];
+      // keep the most recent record per slot
+      if (!prev || String(r.savedAt) >= String(prev.savedAt)) absentMap[r.slotId] = r;
+    });
+  }catch(e){ console.warn('Absent list not loaded', e); }
+}
+
+async function loadSchedule(){
+  const date = todayISO();
+  loadStatus.textContent = 'Loading schedule for '+date+'…';
+  emptyMsg.style.display = 'none';
+  try{
+    const [res] = await Promise.all([
+      fetch(SHEET_URL+'?action=list&sheet='+encodeURIComponent(date)),
+      loadAbsent(date)
+    ]);
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const json = await res.json();
+    if (json.error && !(json.rows && json.rows.length)) throw new Error(json.error);
+    const rows = Array.isArray(json) ? json : (json.rows || []);
+    data = rows.map(normalizeRow);
+    loadStatus.textContent = data.length ? `Loaded ${data.length} duties for ${date}` : `No rows found in sheet tab “${date}”`;
+    tick();
+  }catch(err){
+    console.error(err);
+    loadStatus.textContent = 'Could not load schedule: '+(err.message || err);
+    data = [];
+    render('');
+  }
+}
+
+document.getElementById('enableBtn').addEventListener('click', function(){
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  audioCtx.resume();
+  this.textContent = 'Alerts On';
+  this.classList.add('on');
+  beep();
+});
+document.getElementById('refreshBtn').addEventListener('click', loadSchedule);
+searchEl.addEventListener('input', e => render(e.target.value));
+
+loadSchedule();
+setInterval(tick, 15000);
+</script>
+</body>
+</html>
