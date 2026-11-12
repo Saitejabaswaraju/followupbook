@@ -200,12 +200,14 @@ dialog .dbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px
     <button class="btn active" id="vDuties" type="button">Duties</button>
     <button class="btn" id="vUpcoming" type="button">Upcoming</button>
     <button class="btn" id="vAbs" type="button">Absent<span class="n" id="vAbsN"></span></button>
+    <button class="btn" id="vWent" type="button">Went Back<span class="n" id="vWentN"></span></button>
     <button class="btn" id="vBus" type="button">Want of Bus<span class="n" id="vBusN"></span></button>
     <button class="btn" id="vAbsent" type="button">Exchanges &amp; Late<span class="n" id="vAbsentN"></span></button>
   </div>
   <div id="loadStatus" role="status"></div>
   <section id="upcomingView" style="display:none;padding:12px 14px 32px" aria-label="Upcoming driver reporting"></section>
   <section id="absTab" style="display:none;padding:12px 14px 32px" aria-label="Absent drivers"></section>
+  <section id="wentTab" style="display:none;padding:12px 14px 32px" aria-label="Drivers who went back"></section>
   <section id="busView" style="display:none;padding:12px 14px 32px" aria-label="Want of bus and went back"></section>
   <section id="absentView" aria-label="Absent, late and exchanged drivers"></section>
   <section class="cards" id="cards" aria-label="Driver duties"></section>
@@ -662,7 +664,7 @@ function renderAbsentView(){
 function renderBusView(){
   const res = analyse();
   const chip = (c,n,l) => `<div class="chip ${c}"><b>${n}</b><span>${l}</span></div>`;
-  const all = res.noBus.map(x => ({x, back:false})).concat(res.wentBack.map(x => ({x, back:true})));
+  const all = res.noBus.map(x => ({x, back:false}));
   const rows = all.map(({x,back},i) => {
     const p = phoneOf(x.a);
     const acts = back ? `<button type="button" class="btn" data-act="unback" data-emp="${esc(x.a.empId)}">Undo</button>`
@@ -670,7 +672,7 @@ function renderBusView(){
     return `<tr><td>${i+1}</td><td><b>${esc(x.a.empId)}</b></td><td>${esc(x.a.empName)||'—'}</td><td>${phoneCell(p)}</td><td>${esc(x.r.servNo)||'—'}</td><td>${esc(x.a.arrivedAt)||'—'}</td><td>${back ? '<span class="badge soon">Went back '+esc(x.a.wentBackAt)+'</span>' : '<span class="badge red">Waiting for bus</span>'}</td><td class="act">${p ? `<a class="btn call" href="tel:${esc(p)}" aria-label="Call" title="Call">${ICON_CALL}</a> ` : ''}${acts}</td></tr>`;
   });
   document.getElementById('busView').innerHTML = `<div class="chips">${chip('red',res.noBus.length,'Waiting for bus')}${chip('amber',res.wentBack.length,'Went back')}</div>`
-    + `<div class="sec"><h2>Want of bus (${all.length})</h2><small>Drivers who came but have no bus, and those who went back</small></div>`
+    + `<div class="sec"><h2>Want of bus (${all.length})</h2><small>Drivers who came and are still waiting for a bus</small></div>`
     + dtable(['#','Emp ID','Name','Phone','Service','Came','Status',''], rows);
 }
 function phoneOf(x){ return x.phone || (findDutyDriver(x.empId) || {}).phone || ''; }
@@ -679,6 +681,12 @@ function dtable(head, rows){
 }
 function phoneCell(p){ return p ? `<a href="tel:${esc(p)}">${esc(p)}</a>` : '—'; }
 
+function renderWentTab(){
+  const res = analyse();
+  const rows = res.wentBack.map((x,i) => { const p = phoneOf(x.a); return `<tr><td>${i+1}</td><td><b>${esc(x.a.empId)}</b></td><td>${esc(x.a.empName)||'—'}</td><td>${phoneCell(p)}</td><td>${esc(x.r.servNo)||'—'}</td><td>${timeDisplay(x.r.driverRT)}</td><td>${esc(x.a.arrivedAt)||'—'}</td><td>${esc(x.a.wentBackAt)||'—'}</td><td class="act">${p ? `<a class="btn call" href="tel:${esc(p)}" aria-label="Call" title="Call">${ICON_CALL}</a> ` : ''}<button type="button" class="btn" data-act="unback" data-emp="${esc(x.a.empId)}">Undo</button></td></tr>`; });
+  document.getElementById('wentTab').innerHTML = `<div class="sec"><h2>Went back list (${rows.length})</h2><small>Drivers who came, got no bus and went back</small></div>`
+    + dtable(['#','Emp ID','Name','Phone','Service','RT','Came','Went back',''], rows);
+}
 function renderAbsTab(){
   const res = analyse(), list = res.absent.filter(x => x.confirmed), waiting = res.absent.length - list.length;
   const rows = list.map((x,i) => `<tr><td>${i+1}</td><td><b>${esc(x.r.empId)||'—'}</b></td><td>${esc(x.r.empName)||'—'}</td><td>${phoneCell(x.r.phone)}</td><td>${esc(x.r.servNo)||'—'}</td><td>${timeDisplay(x.r.driverRT)}</td><td>${hm(x.over)} over</td><td class="act">${x.r.phone ? `<a class="btn call" href="tel:${esc(x.r.phone)}">${ICON_CALL}Call</a>` : ''}</td></tr>`);
@@ -691,8 +699,8 @@ function renderAbsTab(){
 
 function setView(v){
   view = v;
-  const ids = {duties:'vDuties', upcoming:'vUpcoming', abs:'vAbs', bus:'vBus', absent:'vAbsent'};
-  const secs = {upcoming:'upcomingView', abs:'absTab', bus:'busView', absent:'absentView'};
+  const ids = {duties:'vDuties', upcoming:'vUpcoming', abs:'vAbs', went:'vWent', bus:'vBus', absent:'vAbsent'};
+  const secs = {upcoming:'upcomingView', abs:'absTab', went:'wentTab', bus:'busView', absent:'absentView'};
   Object.keys(ids).forEach(k => document.getElementById(ids[k]).classList.toggle('active', v === k));
   Object.keys(secs).forEach(k => document.getElementById(secs[k]).style.display = v === k ? 'block' : 'none');
   cardsEl.style.display = v === 'duties' ? '' : 'none';
@@ -701,6 +709,7 @@ function setView(v){
   tick();
 }
 document.getElementById('vAbs').addEventListener('click', () => setView('abs'));
+document.getElementById('vWent').addEventListener('click', () => setView('went'));
 document.getElementById('vUpcoming').addEventListener('click', () => setView('upcoming'));
 document.getElementById('vBus').addEventListener('click', () => setView('bus'));
 document.getElementById('vDuties').addEventListener('click', () => setView('duties'));
@@ -811,15 +820,17 @@ function tick(){
   if (view === 'upcoming') renderUpcoming();
   else if (view === 'bus'){ if (!dlg.open) renderBusView(); }
   else if (view === 'abs') renderAbsTab();
+  else if (view === 'went') renderWentTab();
   else if (view === 'absent'){ if (!dlg.open) renderAbsentView(); }
   else { render(searchEl.value); }
   renderAbsentCount();
 }
 function renderAbsentCount(){ /* also refreshes the tab badges */
   const res = analyse(), n = res.absent.filter(x => x.confirmed).length + res.late.length + res.exchanged.length;
-  const nb = res.noBus.length + res.wentBack.length, na = res.absent.filter(x => x.confirmed).length, nw = res.wentBack.length;
+  const nb = res.noBus.length, na = res.absent.filter(x => x.confirmed).length, nw = res.wentBack.length;
   document.getElementById('vBusN').textContent = nb ? '('+nb+')' : '';
   document.getElementById('vAbsN').textContent = na ? '('+na+')' : '';
+  document.getElementById('vWentN').textContent = nw ? '('+nw+')' : '';
   document.getElementById('vAbsentN').textContent = n ? '('+n+')' : '';
 }
 
