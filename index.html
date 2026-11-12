@@ -34,7 +34,7 @@ body{
   padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
   -webkit-tap-highlight-color:transparent;
 }
-button,input,textarea{font:inherit;color:inherit}
+button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 
 /* ---------- Header (mobile first) ---------- */
@@ -61,7 +61,6 @@ h1{margin:0;font-size:16px;line-height:1.2;font-weight:700}
 }
 .btn:hover{background:var(--tint)}
 .btn:active{transform:translateY(1px)}
-.btn:disabled{opacity:.6;cursor:not-allowed}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.on{background:var(--green-bg);border-color:var(--green);color:var(--green)}
@@ -69,11 +68,6 @@ h1{margin:0;font-size:16px;line-height:1.2;font-weight:700}
 .btn.call:hover{filter:brightness(1.08)}
 .btn.done-called{background:var(--green-bg);border-color:var(--green);color:var(--green)}
 .btn.done-arrived{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
-.btn.warn{border-color:var(--red);color:var(--red)}
-.btn.warn:hover{background:var(--red-bg)}
-.btn.amber{border-color:var(--amber);color:var(--amber)}
-.btn.amber:hover{background:var(--amber-bg)}
-.btn.danger{background:var(--red);border-color:var(--red);color:#fff}
 
 /* ---------- Content ---------- */
 main{max-width:1280px;margin:0 auto}
@@ -86,22 +80,17 @@ main{max-width:1280px;margin:0 auto}
 .card.alerted{border-left-color:var(--amber);background:linear-gradient(0deg,var(--amber-bg),var(--amber-bg)) ,var(--surface)}
 .card.called{border-left-color:var(--green)}
 .card.arrived{border-left-color:var(--blue)}
-.card.absent{border-left-color:var(--red)}
-.card.wentback{border-left-color:var(--amber)}
 .c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .c-head>div:first-child{min-width:0}
 .svc{font-size:20px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
 .who{margin-top:3px;font-size:14px;color:var(--text);overflow-wrap:anywhere}
 .who span{color:var(--muted)}
-.repl{margin-top:4px;font-size:12.5px;color:var(--red);overflow-wrap:anywhere}
 .badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
 .badge{display:inline-block;font-size:11.5px;font-weight:700;line-height:1;padding:5px 9px;border-radius:999px;background:var(--tint);color:var(--muted);white-space:nowrap}
 .badge.soon{background:var(--amber-bg);color:var(--amber)}
 .badge.due{background:var(--red);color:#fff}
 .badge.called{background:var(--green-bg);color:var(--green)}
 .badge.arrived{background:var(--blue-bg);color:var(--blue)}
-.badge.absent{background:var(--red-bg);color:var(--red)}
-.badge.wentback{background:var(--amber-bg);color:var(--amber)}
 .meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
 .meta b{color:var(--text);font-weight:600;letter-spacing:.02em}
 .times{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 0}
@@ -111,7 +100,6 @@ main{max-width:1280px;margin:0 auto}
 .times .rt dd{color:var(--primary)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .actions .call{grid-column:1/-1}
-.actions2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 
 /* ---------- Table (desktop) ---------- */
 .tablewrap{display:none}
@@ -124,46 +112,55 @@ tbody tr:hover td{background:var(--tint)}
 tr.alerted td{background:var(--amber-bg)}
 tr.called td{background:var(--green-bg)}
 tr.arrived td{background:var(--blue-bg)}
-tr.absent td{background:var(--red-bg)}
-tr.wentback td{background:var(--amber-bg)}
 td.act{white-space:nowrap}
 td.act .btn{min-height:36px;padding:0 12px;font-size:13px;margin-right:6px}
 td.act .btn:last-child{margin-right:0}
-td .repl{margin:2px 0 0}
 
-/* ---------- Modal ---------- */
-.ov{position:fixed;inset:0;z-index:100;background:rgba(10,16,24,.55);display:flex;align-items:flex-end;justify-content:center;padding:0}
-.ov[hidden]{display:none}
-.sheet{
-  width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--surface);color:var(--text);
-  border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 24px rgba(0,0,0,.25);
-}
-.sheet h2{margin:0 0 10px;font-size:18px}
-.minfo{background:var(--tint);border-radius:var(--r-sm);padding:10px 12px;font-size:14px;margin-bottom:12px;overflow-wrap:anywhere}
-.minfo b{font-weight:700}
-.sheet label{display:block;margin:12px 0 4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-.sheet input,.sheet textarea{
-  width:100%;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-sm);
-  background:var(--bg);color:var(--text);font-size:16px;
-}
-.sheet textarea{resize:vertical}
-.row{display:flex;gap:8px}
-.row input{flex:1;min-width:0}
-.hint{margin-top:6px;font-size:13px;color:var(--muted)}
-.hint.ok{color:var(--green)}
-.hint.bad{color:var(--red)}
-.err{margin-top:10px;font-size:13.5px;color:var(--red);font-weight:600}
-.mact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
-
-@media (min-width:420px){
-  .actions{grid-template-columns:repeat(3,1fr)}
-  .actions .call{grid-column:auto}
-  .actions.nocall{grid-template-columns:1fr 1fr}
-}
+/* ---------- View switch + Absent & Exchanges ---------- */
+.views{display:flex;gap:8px;padding:12px 14px 0}
+.views{flex-wrap:wrap}
+.views .btn{flex:1 1 30%;min-height:42px}
+.views .btn.active{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.views .n{margin-left:4px;opacity:.85;font-variant-numeric:tabular-nums}
+#absentView{display:none;padding:12px 14px 32px}
+.optrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:13px;color:var(--muted);margin-bottom:12px}
+.optrow select{height:36px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:14px;padding:0 8px}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:6px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;box-shadow:var(--shadow)}
+.chip b{display:block;font-size:24px;line-height:1.1;font-variant-numeric:tabular-nums}
+.chip span{font-size:12px;color:var(--muted);font-weight:600}
+.chip.red b{color:var(--red)} .chip.amber b{color:var(--amber)} .chip.blue b{color:var(--blue)} .chip.green b{color:var(--green)}
+.sec{margin:20px 0 8px;display:flex;align-items:baseline;gap:8px}
+.sec h2{margin:0;font-size:15px;font-weight:700}
+.sec small{color:var(--muted);font-size:12.5px}
+.rows{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.rowc{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;min-width:0}
+.rowc.red{border-left-color:var(--red)} .rowc.amber{border-left-color:var(--amber)} .rowc.blue{border-left-color:var(--blue)}
+.rowc .t{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.rowc .t b{font-size:17px;overflow-wrap:anywhere}
+.rowc .l{margin-top:4px;font-size:13.5px;overflow-wrap:anywhere}
+.rowc .l span{color:var(--muted)}
+.rowc .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rowc .acts .btn{min-height:38px;font-size:13px}
+.badge.red{background:var(--red-bg);color:var(--red)}
+.none{padding:14px;border:1px dashed var(--line);border-radius:var(--r);color:var(--muted);font-size:13.5px;text-align:center}
+dialog{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--text);padding:16px;width:min(92vw,420px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 4px;font-size:17px}
+dialog p{margin:0 0 12px;font-size:13px;color:var(--muted)}
+dialog label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+dialog input{width:100%;height:44px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);color:var(--text);padding:0 12px;font-size:16px}
+dialog .hint{min-height:18px;margin-top:6px;font-size:12.5px;color:var(--blue)}
+table.lt th{position:static}
+table.lt td a{color:var(--primary);font-weight:600;text-decoration:none}
+button.chip{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+.chip.sel{outline:2px solid var(--primary)}
+dialog .dbtns .wide{grid-column:1/-1}
+dialog .dbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+@media (min-width:640px){ .chips{grid-template-columns:repeat(5,minmax(0,1fr))} .rows{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:900px){ .views{padding:12px 20px 0;max-width:520px} #absentView{padding:12px 20px 32px} }
 @media (min-width:640px){
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ov{align-items:center;padding:16px}
-  .sheet{border-radius:16px}
 }
 @media (min-width:900px){
   .top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0px)}
@@ -199,7 +196,18 @@ td .repl{margin:2px 0 0}
 </header>
 
 <main>
+  <div class="views">
+    <button class="btn active" id="vDuties" type="button">Duties</button>
+    <button class="btn" id="vUpcoming" type="button">Upcoming</button>
+    <button class="btn" id="vAbs" type="button">Absent<span class="n" id="vAbsN"></span></button>
+    <button class="btn" id="vBus" type="button">Want of Bus<span class="n" id="vBusN"></span></button>
+    <button class="btn" id="vAbsent" type="button">Exchanges &amp; Late<span class="n" id="vAbsentN"></span></button>
+  </div>
   <div id="loadStatus" role="status"></div>
+  <section id="upcomingView" style="display:none;padding:12px 14px 32px" aria-label="Upcoming driver reporting"></section>
+  <section id="absTab" style="display:none;padding:12px 14px 32px" aria-label="Absent drivers"></section>
+  <section id="busView" style="display:none;padding:12px 14px 32px" aria-label="Want of bus and went back"></section>
+  <section id="absentView" aria-label="Absent, late and exchanged drivers"></section>
   <section class="cards" id="cards" aria-label="Driver duties"></section>
   <div class="tablewrap">
     <table>
@@ -215,45 +223,34 @@ td .repl{margin:2px 0 0}
   <div id="emptyMsg" class="empty" style="display:none">No schedule loaded.</div>
 </main>
 
-<!-- Absent / Went-back dialog -->
-<div class="ov" id="modal" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-    <h2 id="mTitle"></h2>
-    <div class="minfo" id="mInfo"></div>
-
-    <div id="repBox">
-      <label for="repId">New driver ID</label>
-      <div class="row">
-        <input id="repId" type="text" inputmode="text" autocomplete="off" placeholder="Enter replacement driver ID">
-        <button type="button" class="btn primary" id="repFetch">Load</button>
-      </div>
-      <div class="hint" id="repStatus">Enter the ID and tap Load to fetch name and phone.</div>
-      <label for="repName">Name</label>
-      <input id="repName" type="text" autocomplete="off">
-      <label for="repPhone">Phone</label>
-      <input id="repPhone" type="tel" inputmode="tel" autocomplete="off">
-    </div>
-
-    <label for="mNote" id="noteLabel">Note (optional)</label>
-    <textarea id="mNote" rows="2" placeholder=""></textarea>
-
-    <div class="err" id="mErr" role="alert"></div>
-    <div class="mact">
-      <button type="button" class="btn" id="mCancel">Cancel</button>
-      <button type="button" class="btn danger" id="mConfirm">Save</button>
-    </div>
+<dialog id="swapDlg">
+  <h3 id="swapTitle">Who is working this service?</h3>
+  <p id="swapSub"></p>
+  <label for="swEmp">Driver Emp ID</label>
+  <input id="swEmp" inputmode="text" autocomplete="off" placeholder="Emp ID of the driver who came">
+  <div class="hint" id="swHint"></div>
+  <label for="swName">Name (needed only if not on today's duty chart)</label>
+  <input id="swName" autocomplete="off" placeholder="Driver name">
+  <label for="swBus">Bus number (the bus this driver takes out)</label>
+  <input id="swBus" autocomplete="off" placeholder="e.g. 7001/02">
+  <label for="swTime">Came at</label>
+  <input id="swTime" type="time">
+  <div class="dbtns">
+    <button type="button" class="btn" id="swCancel">Cancel</button>
+    <button type="button" class="btn primary" id="swSave">Save — driver running</button>
+    <button type="button" class="btn wide" id="swNoBus">No bus yet (want of bus)</button>
   </div>
-</div>
+</dialog>
 
 <script>
-/* Schedule + Absent storage (Apps Script bound to the duty-chart spreadsheet) */
-const SHEET_URL  = 'https://script.google.com/macros/s/AKfycbxZ6LVEAIJZMSbUaEczU4pAb9Reno9WLhdHnnqEdCuar-ooTGwUyLu7_qCeceiUMRC1ow/exec';
-/* Driver master (lookup by driver ID) */
-const DRIVER_URL = 'https://script.google.com/macros/s/AKfycby8JhNak3GslMmDvbfSxeu8hRUaJC3Sq81WeC2eY83mQWqBPQWCJi8m2MxSgeLx2e5v/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxZ6LVEAIJZMSbUaEczU4pAb9Reno9WLhdHnnqEdCuar-ooTGwUyLu7_qCeceiUMRC1ow/exec';
 
 let data = [];
-const absentMap = {};            // slotId -> saved absent / went-back record for today
-const alerted = new Set(), called = new Set(), arrived = new Set();
+const alerted = new Set(), called = new Set();
+let arrivals = [];          // {empId, empName, phone, workedSlotId, workedServNo, arrivedAt} — saved to the "Arrivals" tab
+let view = 'duties';
+let absentAfter = 30;       // minutes after Driver RT with no arrival anywhere before a driver counts as Absent
+const LATE_GRACE = 5;       // minutes after Driver RT before an arrival counts as Late
 let audioCtx = null;
 
 const cardsEl = document.getElementById('cards');
@@ -360,41 +357,30 @@ function render(filter){
   let cards = '', rows = '', visible = 0;
 
   data.forEach((r, idx) => {
-    const ab = absentMap[r.slotId];
-    if (f && ![r.servNo, r.regNo, r.empId, r.empName, r.phone, ab && ab.absentEmpId, ab && ab.absentName]
-        .some(v => String(v == null ? '' : v).toLowerCase().includes(f))) return;
+    if (f && ![r.servNo, r.regNo, r.empId, r.empName, r.phone].some(v => String(v).toLowerCase().includes(f))) return;
     visible++;
 
     const alertKey = todayKey()+'|A|'+r.slotId;
     const callKey  = todayKey()+'|C|'+r.slotId;
-    const arriveKey= todayKey()+'|R|'+r.slotId;
-    const isCalled = called.has(callKey), isArrived = arrived.has(arriveKey);
+    const cover = coverOf(r.slotId);
+    const isCalled = called.has(callKey), isArrived = !!cover;
     const st = statusOf(r);
-    const isWent = ab && ab.type === 'Went Back';
-    const isAbs  = ab && ab.type === 'Absent';
-    const state = (alerted.has(alertKey) ? 'alerted ' : '') +
-      (isWent ? 'wentback' : isAbs ? 'absent' : isArrived ? 'arrived' : isCalled ? 'called' : '');
+    const state = (alerted.has(alertKey) ? 'alerted ' : '') + (isArrived ? 'arrived' : isCalled ? 'called' : '');
 
     const callBtn = r.phone ? `<a class="btn call" href="tel:${esc(r.phone)}">${ICON_CALL}Call</a>` : '';
     const calledBtn = `<button type="button" class="btn ${isCalled?'done-called':''}" data-act="call" data-key="${callKey}">${isCalled?'✓ Called':'Mark Called'}</button>`;
-    const arriveBtn = `<button type="button" class="btn ${isArrived?'done-arrived':''}" data-act="arrive" data-key="${arriveKey}">${isArrived?'✓ Arrived':'Driver Came'}</button>`;
-    const absentBtn = `<button type="button" class="btn warn" data-act="absent" data-slot="${esc(r.slotId)}">${isAbs?'Change Absent':'Absent'}</button>`;
-    const wentBtn   = `<button type="button" class="btn amber" data-act="wentback" data-slot="${esc(r.slotId)}">${isWent?'✓ Went Back':'Went Back (No Bus)'}</button>`;
+    const arriveBtn = `<button type="button" class="btn ${isArrived?'done-arrived':''}" data-act="arrive" data-slot="${esc(r.slotId)}">${isArrived?'✓ Arrived '+esc(cover.arrivedAt||''):'Driver Came'}</button>`
+      + `<button type="button" class="btn" data-act="swap" data-slot="${esc(r.slotId)}">Exchange / Other driver</button>`;
 
-    let stateBadge = isArrived ? '<span class="badge arrived">Arrived</span>' : isCalled ? '<span class="badge called">Called</span>' : '';
-    if (isAbs)  stateBadge = '<span class="badge absent">'+(ab.newEmpId ? 'Replaced' : 'Absent')+'</span>' + stateBadge;
-    if (isWent) stateBadge = '<span class="badge wentback">Went back</span>' + stateBadge;
-
-    let repl = '';
-    if (isAbs) repl = `Absent: ${esc(ab.absentName || '—')} · ID ${esc(ab.absentEmpId || '—')}`;
-    if (isWent) repl = `Went back${ab.note ? ' — '+esc(ab.note) : ' (no bus)'}`;
-    const replHtml = repl ? `<div class="repl">${repl}</div>` : '';
+    const coverOther = cover && cover.empId !== r.empId;
+    const noBus = isArrived && !String(busOf(cover)||'').trim();
+    const stateBadge = isArrived ? `<span class="badge arrived">${coverOther ? 'Arrived: '+esc(cover.empName||cover.empId) : 'Arrived'}</span>${noBus ? '<span class="badge red">'+(cover.wentBackAt ? 'Went back' : 'No bus')+'</span>' : '<span class="badge arrived">Bus '+esc(busOf(cover))+'</span>'}` : isCalled ? '<span class="badge called">Called</span>' : '';
 
     cards += `
 <article class="card ${state}">
   <div class="c-head">
     <div><div class="svc">${esc(r.servNo) || '—'}</div>
-    <div class="who">${esc(r.empName) || '—'} <span>· ID ${esc(r.empId) || '—'}</span></div>${replHtml}</div>
+    <div class="who">${esc(r.empName) || '—'} <span>· ID ${esc(r.empId) || '—'}</span></div></div>
     <div class="badges"><span class="badge ${st.cls}">${st.text}</span>${stateBadge}</div>
   </div>
   <div class="meta"><span>Reg No <b>${esc(r.regNo) || '—'}</b></span>${r.phone ? `<span>${esc(r.phone)}</span>` : ''}</div>
@@ -404,7 +390,6 @@ function render(filter){
     <div><dt>Sch Arvl</dt><dd>${timeDisplay(r.schArvl)}</dd></div>
   </dl>
   <div class="actions ${r.phone?'':'nocall'}">${callBtn}${calledBtn}${arriveBtn}</div>
-  <div class="actions2">${absentBtn}${wentBtn}</div>
 </article>`;
 
     rows += `
@@ -416,10 +401,10 @@ function render(filter){
   <td>${timeDisplay(r.schArvl)}</td>
   <td>${esc(r.regNo) || '—'}</td>
   <td>${esc(r.empId) || '—'}</td>
-  <td>${esc(r.empName) || '—'}${replHtml}</td>
+  <td>${esc(r.empName) || '—'}</td>
   <td>${esc(r.phone) || '—'}</td>
   <td><span class="badge ${st.cls}">${st.text}</span> ${stateBadge}</td>
-  <td class="act">${callBtn}${calledBtn}${arriveBtn}${absentBtn}${wentBtn}</td>
+  <td class="act">${callBtn}${calledBtn}${arriveBtn}</td>
 </tr>`;
   });
 
@@ -431,203 +416,411 @@ function render(filter){
   else if (data.length === 0) emptyMsg.textContent = 'No schedule loaded for today.';
 }
 
-/* ---------- Driver lookup (by driver ID) ---------- */
-const norm = k => String(k).toLowerCase().replace(/[^a-z0-9]/g,'');
-const ID_KEYS    = ['empid','employeeid','driverid','drvid','id','empno','employeeno','empcode','code'];
-const NAME_KEYS  = ['empname','employeename','drivername','name','drvname','fullname'];
-const PHONE_KEYS = ['phone','phoneno','phonenumber','mobile','mobileno','mobilenumber','contact','contactno','cell'];
-
-function pick(obj, keys){
-  const m = {};
-  Object.keys(obj).forEach(k => { m[norm(k)] = obj[k]; });
-  for (const k of keys){ if (m[k] != null && String(m[k]).trim() !== '') return m[k]; }
-  return '';
-}
-function toRecords(json){
-  if (Array.isArray(json)) return json.filter(x => x && typeof x === 'object');
-  if (json && typeof json === 'object'){
-    for (const k of ['rows','data','drivers','result','driver']){
-      if (json[k]) { const r = toRecords(json[k]); if (r.length) return r; }
-    }
-    if (pick(json, ID_KEYS) !== '' || pick(json, NAME_KEYS) !== '') return [json];
-  }
-  return [];
-}
-function matchDriver(json, id){
-  const want = String(id).trim().toLowerCase();
-  const rec = toRecords(json).find(o => String(pick(o, ID_KEYS)).trim().toLowerCase() === want);
-  if (!rec) return null;
-  return {
-    empId: String(pick(rec, ID_KEYS)).trim(),
-    name : String(pick(rec, NAME_KEYS)).trim(),
-    phone: String(pick(rec, PHONE_KEYS)).replace(/\s+/g,'')
-  };
-}
-let driverListCache = null;
-async function lookupDriver(id){
-  const q = encodeURIComponent(id);
-  // 1) direct lookups by ID
-  const direct = [
-    DRIVER_URL+'?action=getDriver&empId='+q+'&driverId='+q+'&id='+q,
-    DRIVER_URL+'?action=driver&empId='+q+'&driverId='+q+'&id='+q
-  ];
-  for (const u of direct){
-    try{
-      const res = await fetch(u);
-      if (!res.ok) continue;
-      const hit = matchDriver(await res.json(), id);
-      if (hit) return hit;
-    }catch(e){}
-  }
-  // 2) full driver list, filtered here
-  try{
-    if (!driverListCache){
-      const res = await fetch(DRIVER_URL+'?action=list&type=drivers');
-      if (res.ok) driverListCache = await res.json();
-    }
-    if (driverListCache){
-      const hit = matchDriver(driverListCache, id);
-      if (hit) return hit;
-    }
-  }catch(e){}
-  return null;
-}
-
-/* ---------- Absent / Went-back dialog ---------- */
-const modal = document.getElementById('modal');
-const el = id => document.getElementById(id);
-let mState = null; // {mode:'absent'|'wentback', row}
-
-function openModal(mode, slotId){
-  const row = data.find(r => r.slotId === slotId);
-  if (!row) return;
-  mState = {mode, row};
-  const isAbs = mode === 'absent';
-  el('mTitle').textContent = isAbs ? 'Mark driver absent' : 'Driver went back (no bus)';
-  el('mInfo').innerHTML =
-    `Service <b>${esc(row.servNo)||'—'}</b> · Reg <b>${esc(row.regNo)||'—'}</b><br>` +
-    `${isAbs ? 'Absent driver' : 'Driver'}: <b>${esc(row.empName)||'—'}</b> · ID ${esc(row.empId)||'—'}` +
-    (row.phone ? ` · ${esc(row.phone)}` : '');
-  el('repBox').style.display = isAbs ? '' : 'none';
-  el('repId').value = ''; el('repName').value = ''; el('repPhone').value = '';
-  setRepStatus('Enter the ID and tap Load to fetch name and phone.', '');
-  el('mNote').value = '';
-  el('mNote').placeholder = isAbs ? 'Reason for absence' : 'e.g. bus not available / breakdown';
-  el('mErr').textContent = '';
-  el('mConfirm').textContent = isAbs ? 'Save absent' : 'Save went back';
-  el('mConfirm').disabled = false;
-  modal.hidden = false;
-  setTimeout(() => (isAbs ? el('repId') : el('mNote')).focus(), 50);
-}
-function closeModal(){ modal.hidden = true; mState = null; }
-function setRepStatus(msg, cls){ const s = el('repStatus'); s.textContent = msg; s.className = 'hint ' + cls; }
-
-async function fetchReplacement(){
-  const id = el('repId').value.trim();
-  if (!id){ setRepStatus('Enter a driver ID first.', 'bad'); return; }
-  const btn = el('repFetch');
-  btn.disabled = true; setRepStatus('Looking up driver '+id+'…', '');
-  try{
-    const d = await lookupDriver(id);
-    if (d){
-      el('repName').value = d.name;
-      el('repPhone').value = d.phone;
-      setRepStatus('Loaded: '+(d.name || id)+(d.phone ? ' · '+d.phone : ''), 'ok');
-    } else {
-      el('repName').value = ''; el('repPhone').value = '';
-      setRepStatus('Driver ID not found. Check the ID, or type name and phone manually.', 'bad');
-    }
-  }catch(e){
-    setRepStatus('Lookup failed: '+(e.message || e), 'bad');
-  }finally{ btn.disabled = false; }
-}
-
-async function saveRecord(){
-  if (!mState) return;
-  const {mode, row} = mState;
-  const isAbs = mode === 'absent';
-  const newId = isAbs ? el('repId').value.trim() : '';
-  const newName = isAbs ? el('repName').value.trim() : '';
-  const newPhone = isAbs ? el('repPhone').value.replace(/\s+/g,'') : '';
-  if (isAbs && newId && !newName){
-    el('mErr').textContent = 'Load the new driver (or type the name) before saving.'; return;
-  }
-  const rec = {
-    type: isAbs ? 'Absent' : 'Went Back',
-    slotId: row.slotId, servNo: row.servNo, regNo: row.regNo,
-    driverRT: timeDisplay(row.driverRT), schDept: timeDisplay(row.schDept), schArvl: timeDisplay(row.schArvl),
-    absentEmpId: row.empId, absentName: row.empName, absentPhone: row.phone,
-    newEmpId: newId, newName: newName, newPhone: newPhone,
-    note: el('mNote').value.trim(),
-    savedAt: new Date().toLocaleString('en-CA', {hour12:false}).replace(',', '')
-  };
-  const btn = el('mConfirm');
-  btn.disabled = true; btn.textContent = 'Saving…'; el('mErr').textContent = '';
-  try{
-    const res = await fetch(SHEET_URL, {
-      method: 'POST',
-      headers: {'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({action:'saveAbsent', date: todayISO(), record: rec})
-    });
-    const json = await res.json();
-    if (json.error) throw new Error(json.error);
-    absentMap[row.slotId] = rec;
-    if (isAbs && newId){
-      row.empId = newId; row.empName = newName; row.phone = newPhone;
-    }
-    closeModal();
-    render(searchEl.value);
-  }catch(err){
-    el('mErr').textContent = 'Could not save: '+(err.message || err);
-    btn.disabled = false;
-    btn.textContent = isAbs ? 'Save absent' : 'Save went back';
-  }
-}
-
-el('repFetch').addEventListener('click', fetchReplacement);
-el('repId').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); fetchReplacement(); } });
-el('mCancel').addEventListener('click', closeModal);
-el('mConfirm').addEventListener('click', saveRecord);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-
-// One delegated handler for card / table buttons
+// One delegated handler for Mark Called / Driver Came (cards and table)
 document.addEventListener('click', e => {
   const btn = e.target.closest('button[data-act]');
   if (!btn) return;
   const act = btn.dataset.act;
-  if (act === 'absent' || act === 'wentback'){ openModal(act, btn.dataset.slot); return; }
-  const set = act === 'call' ? called : arrived;
-  const k = btn.dataset.key;
-  set.has(k) ? set.delete(k) : set.add(k);
-  render(searchEl.value);
+  if (act === 'call'){
+    const k = btn.dataset.key;
+    called.has(k) ? called.delete(k) : called.add(k);
+    render(searchEl.value);
+  } else if (act === 'arrive'){
+    toggleArrive(btn.dataset.slot);
+  } else if (act === 'swap'){
+    openSwap(btn.dataset.slot);
+  } else if (act === 'back'){ setWentBack(btn.dataset.emp, true);
+  } else if (act === 'unback'){ setWentBack(btn.dataset.emp, false);
+  } else if (act === 'kpi'){ kpi = kpi === btn.dataset.k ? null : btn.dataset.k; tick();
+  } else if (act === 'mute'){
+    muted = !muted; tick();
+  } else if (act === 'bus'){
+    const a = arrivalOfEmp(btn.dataset.emp);
+    if (a) openSwap(a.workedSlotId, a);
+  }
 });
+
+/* ======================= Arrivals (Follow-up Book data) ======================= */
+function nowHHMM(){ const d = new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function wrap(m){ m = ((m % 1440) + 1440) % 1440; return m > 720 ? m - 1440 : m; }   // signed minutes, handles midnight
+function slotById(id){ return data.find(r => r.slotId === id); }
+function coverOf(slotId){ return arrivals.find(a => a.workedSlotId === slotId); }
+function busOf(a){ const r = slotById(a.workedSlotId); return a.busRegNo || ''; }
+function arrivalOfEmp(empId){ return empId ? arrivals.find(a => a.empId === String(empId).trim()) : null; }
+
+async function postSheet(body){
+  const res = await fetch(SHEET_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(body)});
+  const j = await res.json();
+  if (!res.ok || j.error) throw new Error(j.error || ('HTTP '+res.status));
+  return j;
+}
+function normalizeArrival(a){
+  return {
+    empId: String(a.empId == null ? '' : a.empId).trim(),
+    empName: a.empName != null ? String(a.empName).trim() : '',
+    phone: a.phone != null ? String(a.phone).replace(/\s+/g,'') : '',
+    workedSlotId: String(a.workedSlotId == null ? '' : a.workedSlotId).trim(),
+    workedServNo: a.workedServNo != null ? String(a.workedServNo).trim() : '',
+    arrivedAt: a.arrivedAt != null ? timeDisplay(a.arrivedAt).replace('—','') : '',
+    busRegNo: a.busRegNo != null ? String(a.busRegNo).trim() : '',
+    wentBackAt: a.wentBackAt != null && a.wentBackAt !== '' ? timeDisplay(a.wentBackAt).replace('—','') : ''
+  };
+}
+async function loadArrivals(){
+  try{
+    const res = await fetch(SHEET_URL+'?action=listArrivals&date='+encodeURIComponent(todayISO()));
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const j = await res.json();
+    if (j.error) throw new Error(j.error);
+    arrivals = (j.rows || []).map(normalizeArrival).filter(a => a.empId && a.workedSlotId);
+  }catch(err){
+    console.error(err);
+    loadStatus.textContent += ' · Arrivals not loaded: ' + (err.message || err) + ' (update the Apps Script and redeploy a new version)';
+  }
+  tick();
+}
+async function setArrival(slotId, who, at){
+  const date = todayISO(), slot = slotById(slotId);
+  const rec = {
+    empId: String(who.empId).trim(), empName: who.empName || '', phone: who.phone || '',
+    workedSlotId: slotId, workedServNo: slot ? slot.servNo : '', arrivedAt: at || nowHHMM(),
+    busRegNo: who.busRegNo || '', wentBackAt: ''
+  };
+  // one driver per service: drop anyone else recorded on this service
+  const dropped = arrivals.filter(a => a.workedSlotId === slotId && a.empId !== rec.empId);
+  arrivals = arrivals.filter(a => a.empId !== rec.empId && a.workedSlotId !== slotId);
+  arrivals.push(rec);
+  tick();
+  try{
+    for (const d of dropped) await postSheet({action:'deleteArrival', date, empId:d.empId});
+    await postSheet({action:'saveArrival', date, record:rec});
+    loadStatus.textContent = 'Saved arrival: '+(rec.empName||rec.empId)+' on '+(rec.workedServNo||slotId)+' at '+rec.arrivedAt;
+  }catch(err){ loadStatus.textContent = 'Arrival not saved to sheet: '+(err.message||err); }
+}
+async function clearArrival(slotId){
+  const a = coverOf(slotId); if (!a) return;
+  arrivals = arrivals.filter(x => x !== a);
+  tick();
+  try{ await postSheet({action:'deleteArrival', date:todayISO(), empId:a.empId}); loadStatus.textContent = 'Arrival removed.'; }
+  catch(err){ loadStatus.textContent = 'Could not remove arrival on sheet: '+(err.message||err); }
+}
+function toggleArrive(slotId){
+  const r = slotById(slotId); if (!r) return;
+  if (coverOf(slotId)) return clearArrival(slotId);
+  // driver is marked present & running only after the bus number is entered
+  openSwap(slotId, r.empId ? {empId:r.empId, empName:r.empName, phone:r.phone, busRegNo:'', arrivedAt:''} : null);
+}
+async function setWentBack(empId, on){
+  const a = arrivalOfEmp(empId); if (!a) return;
+  a.wentBackAt = on ? nowHHMM() : '';
+  tick();
+  try{ await postSheet({action:'saveArrival', date:todayISO(), record:a}); loadStatus.textContent = on ? 'Marked went back.' : 'Back on the waiting list.'; }
+  catch(err){ loadStatus.textContent = 'Not saved to sheet: '+(err.message||err); }
+}
+
+/* Exchange / other driver dialog */
+const dlg = document.getElementById('swapDlg'), swEmp = document.getElementById('swEmp'), swName = document.getElementById('swName'),
+      swTime = document.getElementById('swTime'), swBus = document.getElementById('swBus'), swHint = document.getElementById('swHint');
+let swapSlot = null, swapPhone = '';
+function findDutyDriver(empId){ const id = String(empId||'').trim(); return id ? data.find(r => r.empId === id) : null; }
+function openSwap(slotId, pre){
+  const r = slotById(slotId); if (!r) return;
+  swapSlot = slotId; swapPhone = '';
+  document.getElementById('swapTitle').textContent = pre && pre.empId ? 'Bus number for '+(pre.empName || pre.empId)+' — '+(r.servNo || '') : 'Who is working '+(r.servNo || 'this service')+'?';
+  document.getElementById('swapSub').textContent = 'Assigned: '+(r.empName ? r.empName+' (ID '+r.empId+')' : 'nobody')+' · RT '+timeDisplay(r.driverRT)+(r.regNo ? ' · Reg '+r.regNo : '');
+  swEmp.value = pre ? pre.empId : ''; swName.value = pre ? pre.empName : ''; swHint.textContent = '';
+  swBus.value = pre ? (pre.busRegNo || '') : ''; swTime.value = pre && pre.arrivedAt ? pre.arrivedAt : nowHHMM();
+  swapPhone = pre ? pre.phone : '';
+  dlg.showModal(); (pre ? swBus : swEmp).focus();
+}
+swEmp.addEventListener('input', () => {
+  const d = findDutyDriver(swEmp.value);
+  if (d){
+    swName.value = d.empName; swapPhone = d.phone;
+    const mine = arrivalOfEmp(d.empId);
+    swHint.textContent = 'On duty chart: '+(d.servNo||'—')+(mine && mine.workedSlotId !== d.slotId ? ' · currently recorded on '+(mine.workedServNo||'another service')+' (will be moved here)' : '');
+  } else { swapPhone = ''; swHint.textContent = swEmp.value.trim() ? 'Not on today’s duty chart (spare / outside driver) — enter the name.' : ''; }
+});
+document.getElementById('swCancel').addEventListener('click', () => dlg.close());
+function submitSwap(noBus){
+  const id = swEmp.value.trim(), bus = swBus.value.trim();
+  if (!id){ swHint.textContent = 'Enter the driver Emp ID.'; return; }
+  if (!noBus){
+    if (!bus){ swHint.textContent = 'Enter the bus number, or press “No bus yet”.'; return; }
+    const used = arrivals.find(a => a.empId !== id && a.busRegNo && a.busRegNo.toLowerCase() === bus.toLowerCase() && !a.wentBackAt);
+    if (used){ swHint.textContent = 'Bus '+bus+' is already with '+(used.empName||used.empId)+' on '+used.workedServNo+'.'; return; }
+  }
+  setArrival(swapSlot, {empId:id, empName:swName.value.trim(), phone:swapPhone, busRegNo: noBus ? '' : bus}, swTime.value || nowHHMM());
+  dlg.close();
+}
+document.getElementById('swSave').addEventListener('click', () => submitSwap(false));
+document.getElementById('swNoBus').addEventListener('click', () => submitSwap(true));
+
+/* ======================= Compare duty chart with arrivals ======================= */
+function analyse(){
+  const d = new Date(), nowMin = d.getHours()*60 + d.getMinutes();
+  const out = {absent:[], late:[], exchanged:[], needs:[], noBus:[], wentBack:[]};
+  data.forEach(r => {
+    const rt = parseT(r.driverRT);
+    const over = rt === null ? null : wrap(nowMin - rt);          // minutes since Driver RT (negative = not due yet)
+    const cover = coverOf(r.slotId);
+    const mine = arrivalOfEmp(r.empId);                            // did the assigned driver come for ANY duty?
+
+    // 1) Assigned driver did not attend any duty → Absent (or "not yet came" until the grace passes)
+    if (r.empId && !mine && over !== null && over >= 0){
+      out.absent.push({r, over, confirmed: over >= absentAfter});
+    }
+    // 2) Service is driven by someone other than the assigned driver → exchange plan
+    if (cover && cover.empId !== r.empId) out.exchanged.push({r, cover, moved: mine});
+    // 3) Nobody on the service although it needs a driver
+    if (!cover){
+      if (mine) out.needs.push({r, why:'Assigned driver moved to '+(mine.workedServNo || 'another service')});
+      else if (r.empId && over !== null && over >= absentAfter) out.needs.push({r, why:'Assigned driver absent'});
+      else if (!r.empId && over !== null && over >= 0) out.needs.push({r, why:'No driver assigned'});
+    }
+  });
+  // Came, but no bus on the service he is working (want of bus) → goes into the Absent list
+  arrivals.forEach(a => {
+    const r = slotById(a.workedSlotId);
+    if (!r) return;
+    if (a.wentBackAt) out.wentBack.push({a, r});
+    else if (!String(busOf(a)||'').trim()) out.noBus.push({a, r});
+  });
+  // Late: any arrival after Driver RT of the service actually worked
+  arrivals.forEach(a => {
+    const r = slotById(a.workedSlotId), rt = r ? parseT(r.driverRT) : null, at = parseT(a.arrivedAt);
+    if (rt === null || at === null) return;
+    const late = wrap(at - rt);
+    if (late > LATE_GRACE) out.late.push({a, r, late});
+  });
+  out.absent.sort((x,y) => y.over - x.over);
+  out.late.sort((x,y) => y.late - x.late);
+  return out;
+}
+
+function rowCard(cls, title, badges, lines, acts){
+  return `<article class="rowc ${cls}"><div class="t"><b>${title}</b><div class="badges">${badges}</div></div>${lines.map(l => `<div class="l">${l}</div>`).join('')}${acts ? `<div class="acts">${acts}</div>` : ''}</article>`;
+}
+function callBtn(phone){ return phone ? `<a class="btn call" href="tel:${esc(phone)}">${ICON_CALL}Call</a>` : ''; }
+function coverBtn(slotId, label){ return `<button type="button" class="btn" data-act="swap" data-slot="${esc(slotId)}">${label}</button>`; }
+function section(title, hint, items){
+  return `<div class="sec"><h2>${title} (${items.length})</h2><small>${hint}</small></div>` +
+    (items.length ? `<div class="rows">${items.join('')}</div>` : '<div class="none">None</div>');
+}
+function hm(m){ return m >= 60 ? Math.floor(m/60)+'h '+(m%60)+'m' : m+'m'; }
+
+function renderAbsentView(){
+  const res = analyse();
+  const confirmed = res.absent.filter(x => x.confirmed), waiting = res.absent.filter(x => !x.confirmed);
+  const absentTotal = confirmed.length;
+  const chip = (cls, n, label) => `<div class="chip ${cls}"><b>${n}</b><span>${label}</span></div>`;
+  let h = `<div class="optrow"><label for="graceSel">Mark absent when no arrival for</label>
+    <select id="graceSel">${[0,15,30,45,60,90,120].map(m => `<option value="${m}" ${m===absentAfter?'selected':''}>${m===0?'as soon as RT passes':m+' min after RT'}</option>`).join('')}</select></div>
+    <div class="chips">${chip('red',absentTotal,'Absent')}${chip('amber',waiting.length,'Not yet came')}${chip('amber',res.late.length,'Late')}${chip('blue',res.exchanged.length,'Exchanged')}${chip('red',res.needs.length,'Service needs driver')}</div>`;
+
+  const absentRows = confirmed.map(x => rowCard('red', esc(x.r.servNo)||'—',
+      '<span class="badge red">Absent</span>', [
+      `${esc(x.r.empName)||'—'} <span>· ID ${esc(x.r.empId)}</span>`,
+      `<span>RT ${timeDisplay(x.r.driverRT)} · ${hm(x.over)} over${x.r.regNo ? ' · Reg '+esc(x.r.regNo) : ''}</span>`],
+      callBtn(x.r.phone)+coverBtn(x.r.slotId,'Assign driver')));
+
+  h += section('Not yet came', 'RT passed, still inside the wait time — may come late or take another service', waiting.map(x => rowCard('amber', esc(x.r.servNo)||'—',
+      '<span class="badge soon">Waiting '+hm(x.over)+'</span>', [
+      `${esc(x.r.empName)||'—'} <span>· ID ${esc(x.r.empId)}</span>`,
+      `<span>RT ${timeDisplay(x.r.driverRT)}${x.r.regNo ? ' · Reg '+esc(x.r.regNo) : ''}</span>`],
+      callBtn(x.r.phone)+`<button type="button" class="btn" data-act="arrive" data-slot="${esc(x.r.slotId)}">Driver Came</button>`)));
+
+  h += section('Late', 'Came after Driver RT', res.late.map(x => rowCard('amber', esc(x.a.workedServNo||'—'),
+      '<span class="badge soon">'+hm(x.late)+' late</span>', [
+      `${esc(x.a.empName||x.a.empId)} <span>· ID ${esc(x.a.empId)}</span>`,
+      `<span>RT ${timeDisplay(x.r && x.r.driverRT)} · came ${esc(x.a.arrivedAt)}${x.r && x.r.regNo ? ' · Reg '+esc(x.r.regNo) : ''}</span>`], '')));
+
+  h += section('Driver exchange plan', 'Service driven by a different driver than the duty chart', res.exchanged.map(x => {
+      const asg = x.r.empId ? `${esc(x.r.empName)||'—'} <span>(ID ${esc(x.r.empId)})</span>` : '<span>nobody assigned</span>';
+      const asgState = !x.r.empId ? '' : x.moved ? ` → moved to <b>${esc(x.moved.workedServNo||'another service')}</b>` : ' → <b style="color:var(--red)">absent</b>';
+      const was = findDutyDriver(x.cover.empId);
+      const note = was && was.slotId !== x.r.slotId ? `was assigned ${esc(was.servNo)}` : (was ? '' : 'spare / outside driver');
+      return rowCard('blue', esc(x.r.servNo)||'—', '<span class="badge arrived">Exchanged</span>', [
+        `<span>Chart:</span> ${asg}${asgState}`,
+        `<span>Now:</span> <b>${esc(x.cover.empName||x.cover.empId)}</b> <span>(ID ${esc(x.cover.empId)}) · came ${esc(x.cover.arrivedAt)}${note ? ' · '+note : ''}${x.r.regNo ? ' · Reg '+esc(x.r.regNo) : ''}</span>`],
+        coverBtn(x.r.slotId,'Change'));
+    }));
+
+  h += section('Services needing a driver', 'No driver on the bus yet', res.needs.map(x => rowCard('red', esc(x.r.servNo)||'—',
+      '<span class="badge red">Need driver</span>', [
+      `<span>${esc(x.why)}</span>`,
+      `<span>RT ${timeDisplay(x.r.driverRT)} · Dept ${timeDisplay(x.r.schDept)}${x.r.regNo ? ' · Reg '+esc(x.r.regNo) : ''}</span>`],
+      coverBtn(x.r.slotId,'Assign driver'))));
+
+  document.getElementById('absentView').innerHTML = h;
+  const sel = document.getElementById('graceSel');
+  if (sel) sel.onchange = () => { absentAfter = +sel.value; tick(); };
+  const nBadge = absentTotal + res.late.length + res.exchanged.length;
+  document.getElementById('vAbsentN').textContent = nBadge ? '('+nBadge+')' : '';
+}
+
+function renderBusView(){
+  const res = analyse();
+  const chip = (c,n,l) => `<div class="chip ${c}"><b>${n}</b><span>${l}</span></div>`;
+  const all = res.noBus.map(x => ({x, back:false})).concat(res.wentBack.map(x => ({x, back:true})));
+  const rows = all.map(({x,back},i) => {
+    const p = phoneOf(x.a);
+    const acts = back ? `<button type="button" class="btn" data-act="unback" data-emp="${esc(x.a.empId)}">Undo</button>`
+      : `<button type="button" class="btn primary" data-act="bus" data-emp="${esc(x.a.empId)}">Bus given</button> <button type="button" class="btn" data-act="back" data-emp="${esc(x.a.empId)}">Went back</button>`;
+    return `<tr><td>${i+1}</td><td><b>${esc(x.a.empId)}</b></td><td>${esc(x.a.empName)||'—'}</td><td>${phoneCell(p)}</td><td>${esc(x.r.servNo)||'—'}</td><td>${esc(x.a.arrivedAt)||'—'}</td><td>${back ? '<span class="badge soon">Went back '+esc(x.a.wentBackAt)+'</span>' : '<span class="badge red">Waiting for bus</span>'}</td><td class="act">${p ? `<a class="btn call" href="tel:${esc(p)}" aria-label="Call" title="Call">${ICON_CALL}</a> ` : ''}${acts}</td></tr>`;
+  });
+  document.getElementById('busView').innerHTML = `<div class="chips">${chip('red',res.noBus.length,'Waiting for bus')}${chip('amber',res.wentBack.length,'Went back')}</div>`
+    + `<div class="sec"><h2>Want of bus (${all.length})</h2><small>Drivers who came but have no bus, and those who went back</small></div>`
+    + dtable(['#','Emp ID','Name','Phone','Service','Came','Status',''], rows);
+}
+function phoneOf(x){ return x.phone || (findDutyDriver(x.empId) || {}).phone || ''; }
+function dtable(head, rows){
+  return rows.length ? `<div style="overflow-x:auto"><table class="lt"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : '<div class="none">None</div>';
+}
+function phoneCell(p){ return p ? `<a href="tel:${esc(p)}">${esc(p)}</a>` : '—'; }
+
+function renderAbsTab(){
+  const res = analyse(), list = res.absent.filter(x => x.confirmed), waiting = res.absent.length - list.length;
+  const rows = list.map((x,i) => `<tr><td>${i+1}</td><td><b>${esc(x.r.empId)||'—'}</b></td><td>${esc(x.r.empName)||'—'}</td><td>${phoneCell(x.r.phone)}</td><td>${esc(x.r.servNo)||'—'}</td><td>${timeDisplay(x.r.driverRT)}</td><td>${hm(x.over)} over</td><td class="act">${x.r.phone ? `<a class="btn call" href="tel:${esc(x.r.phone)}">${ICON_CALL}Call</a>` : ''}</td></tr>`);
+  document.getElementById('absTab').innerHTML = `<div class="optrow"><label for="graceSel2">Mark absent when no arrival for</label>
+    <select id="graceSel2">${[0,15,30,45,60,90,120].map(m => `<option value="${m}" ${m===absentAfter?'selected':''}>${m===0?'as soon as RT passes':m+' min after RT'}</option>`).join('')}</select>
+    <span>Only drivers with no arrival on any duty. Late or exchanged drivers are not listed.${waiting ? ' ('+waiting+' more still within the waiting time.)' : ''}</span></div>`
+    + section('Absent drivers', 'ID · name · phone', []).replace(/<div class="none">None<\/div>/,'') + dtable(['#','Emp ID','Name','Phone','Service','RT','Over','Call'], rows);
+  const sel = document.getElementById('graceSel2'); if (sel) sel.onchange = () => { absentAfter = +sel.value; tick(); };
+}
+
+function setView(v){
+  view = v;
+  const ids = {duties:'vDuties', upcoming:'vUpcoming', abs:'vAbs', bus:'vBus', absent:'vAbsent'};
+  const secs = {upcoming:'upcomingView', abs:'absTab', bus:'busView', absent:'absentView'};
+  Object.keys(ids).forEach(k => document.getElementById(ids[k]).classList.toggle('active', v === k));
+  Object.keys(secs).forEach(k => document.getElementById(secs[k]).style.display = v === k ? 'block' : 'none');
+  cardsEl.style.display = v === 'duties' ? '' : 'none';
+  document.querySelector('.tablewrap').style.display = v === 'duties' ? '' : 'none';
+  if (v !== 'duties') emptyMsg.style.display = 'none';
+  tick();
+}
+document.getElementById('vAbs').addEventListener('click', () => setView('abs'));
+document.getElementById('vUpcoming').addEventListener('click', () => setView('upcoming'));
+document.getElementById('vBus').addEventListener('click', () => setView('bus'));
+document.getElementById('vDuties').addEventListener('click', () => setView('duties'));
+document.getElementById('vAbsent').addEventListener('click', () => setView('absent'));
+
+
+/* ======================= Upcoming Reporting + reminder engine ======================= */
+let kpi = null;
+let ready = false, muted = false, remind = [30,15,5];    // configurable first/second/final reminder (minutes before RT)
+const fired = new Set(), alertLog = [];
+function istMin(){
+  const p = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+  return (+p.find(x=>x.type==='hour').value)*60 + (+p.find(x=>x.type==='minute').value);
+}
+function reported(r){ return !!(coverOf(r.slotId) || arrivalOfEmp(r.empId)); }
+function stageFor(diff){            // diff = minutes until Driver RT (negative = past); services >2h overdue are never alerted
+  if (diff > 0){ const t = [...remind].sort((a,b)=>a-b).find(t => diff <= t); return t ? 'r'+t : null; }
+  if (diff > -5) return 'due';
+  if (diff > -15) return 'late5';
+  if (diff > -120) return 'esc'+Math.floor(-diff/15)*15;
+  return null;
+}
+function stageLabel(st){
+  return st[0]==='r' ? st.slice(1)+' min reminder' : st==='due' ? 'Reporting time reached' : st==='late5' ? 'Not reported' : 'Overdue '+st.slice(3)+'m+';
+}
+function patFor(st){
+  if (st[0]==='r'){ const n = +st.slice(1); return n >= 30 ? [[660,.3]] : n >= 15 ? [[740,.2],[740,.2]] : [[880,.15],[880,.15],[880,.15]]; }
+  if (st==='due') return [[988,.5],[740,.5],[988,.5],[740,.5]];
+  return [[1175,.12],[1175,.12],[1175,.12],[1175,.12],[1175,.12]];
+}
+function playPattern(pat){
+  if (muted) return;
+  if (!audioCtx || audioCtx.state !== 'running'){ audioCtx && audioCtx.resume && audioCtx.resume(); return; }
+  let t = audioCtx.currentTime;
+  pat.forEach(([f,d]) => {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type='sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.5,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g).connect(audioCtx.destination); o.start(t); o.stop(t+d+.05); t += d+.12;
+  });
+}
+function fire(r, st){
+  const key = todayISO()+'|'+r.slotId+'|'+st;
+  if (fired.has(key)) return;
+  try{ if (localStorage.getItem('fa:'+key)) { fired.add(key); return; } localStorage.setItem('fa:'+key,'1'); }catch(e){}   // stops a second browser tab repeating it
+  fired.add(key);
+  alertLog.unshift({at:nowHHMM(), servNo:r.servNo, name:r.empName, stage:st});
+  if (st[0]==='r') alerted.add(todayKey()+'|A|'+r.slotId);
+  playPattern(patFor(st));
+  try{ if (window.Notification && Notification.permission==='granted') new Notification(r.servNo+' — '+stageLabel(st), {body:(r.empName||'No driver')+' · RT '+timeDisplay(r.driverRT), tag:key}); }catch(e){}
+  postSheet({action:'saveAlert', date:todayISO(), record:{slotId:r.slotId, servNo:r.servNo, stage:st, firedAt:nowHHMM()}}).catch(e => console.error('alert not saved', e));
+}
+function runAlerts(){
+  if (!ready) return;                       // wait until arrivals + previous alerts are loaded (no re-beeping after refresh)
+  const now = istMin();
+  data.forEach(r => { const rt = parseT(r.driverRT); if (rt === null || reported(r)) return; const st = stageFor(wrap(rt-now)); if (st) fire(r, st); });
+}
+async function loadAlerts(){
+  try{
+    const res = await fetch(SHEET_URL+'?action=listAlerts&date='+encodeURIComponent(todayISO()));
+    const j = await res.json(); if (j.error) throw new Error(j.error);
+    (j.rows||[]).forEach(a => { fired.add(todayISO()+'|'+a.slotId+'|'+a.stage); alertLog.push({at:String(a.firedAt||'').slice(0,5), servNo:a.servNo, name:'', stage:String(a.stage)}); });
+    alertLog.reverse();
+  }catch(err){ console.error(err); loadStatus.textContent += ' · Alert history not loaded: '+(err.message||err); }
+}
+function waLink(p){ const d = String(p||'').replace(/\D/g,''); return d ? 'https://wa.me/'+(d.length===10 ? '91'+d : d) : ''; }
+
+function renderUpcoming(){
+  const now = istMin();
+  const list = data.map(r => { const rt = parseT(r.driverRT); return {r, diff: rt===null ? null : wrap(rt-now), rep: reported(r)}; })
+    .filter(x => x.diff !== null && !x.rep && x.diff > -120).sort((a,b) => b.diff - a.diff === 0 ? 0 : a.diff - b.diff);
+  const total = data.length, repN = data.filter(reported).length;
+  const within30 = list.filter(x => x.diff > 0 && x.diff <= 30).length, overdue = list.filter(x => x.diff <= 0).length;
+  const chip = (c,n,l) => `<div class="chip ${c}"><b>${n}</b><span>${l}</span></div>`;
+  const live = audioCtx && audioCtx.state === 'running';
+  const yet = list.filter(x => x.diff > 0);
+  const sets = {sched:['Scheduled', data], rep:['Reported', data.filter(reported)], yet:['Yet to report', yet.map(x=>x.r)],
+                w30:['Within 30 min', list.filter(x => x.diff > 0 && x.diff <= 30).map(x=>x.r)], over:['Overdue', list.filter(x => x.diff <= 0).map(x=>x.r)]};
+  const kc = (k,c,n,l) => `<button type="button" class="chip ${c} ${kpi===k?'sel':''}" data-act="kpi" data-k="${k}" aria-pressed="${kpi===k}"><b>${n}</b><span>${l}</span></button>`;
+  let h = `<div class="chips">${kc('sched','',total,'Scheduled')}${kc('rep','green',repN,'Reported')}${kc('yet','amber',yet.length,'Yet to report')}${kc('w30','amber',within30,'Within 30 min')}${kc('over','red',overdue,'Overdue')}</div>
+  <div class="optrow" style="margin-top:10px"><button type="button" class="btn ${muted?'':'on'}" data-act="mute">${muted?'🔇 Muted':'🔔 Sound on'}</button>
+  <span>${live ? 'Reminders: '+remind.join(' / ')+' min before RT, then at RT, +5 and every 15 min overdue.' : '<b style="color:var(--red)">Sound is off — tap “Enable Alerts” once so the browser allows beeps.</b>'}</span></div>
+  <div class="optrow">Alerts run only while this page is open and the device is awake; a locked or sleeping phone can miss them.</div>`;
+  if (kpi && sets[kpi]){
+    const [title, rs] = sets[kpi];
+    h += `<div class="sec"><h2>${title} (${rs.length})</h2><small>Tap the card again to close</small></div>` + dtable(['#','Emp ID','Name','Service','Call'],
+      rs.map((r,i) => `<tr><td>${i+1}</td><td><b>${esc(r.empId)||'—'}</b></td><td>${esc(r.empName)||'—'}</td><td>${esc(r.servNo)||'—'}</td><td class="act">${r.phone ? `<a class="btn call" href="tel:${esc(r.phone)}" aria-label="Call ${esc(r.empName)}" title="Call">${ICON_CALL}</a>` : '—'}</td></tr>`));
+  }
+  h += section('Upcoming reporting', 'By Driver RT, not yet reported', list.map(({r,diff}) => {
+    const st = stageFor(diff), cls = diff <= 0 ? 'red' : diff <= 30 ? 'amber' : '';
+    const cd = diff > 0 ? hm(diff)+' left' : diff === 0 ? 'Due now' : hm(-diff)+' overdue';
+    const badge = `<span class="badge ${diff<=0?'red':diff<=30?'soon':''}">${cd}</span>`;
+    const wa = waLink(r.phone);
+    return rowCard(cls, esc(r.servNo)||'—', badge, [
+      `${esc(r.empName)||'No driver'} <span>· ID ${esc(r.empId)||'—'}${r.phone ? ' · '+esc(r.phone) : ''}</span>`,
+      `<span>RT <b>${timeDisplay(r.driverRT)}</b> · Dept ${timeDisplay(r.schDept)} · Arvl ${timeDisplay(r.schArvl)} · Reg ${esc(r.regNo)||'—'}</span>`,
+      `<span>${diff<=0 ? 'Status: '+(st ? stageLabel(st) : 'Overdue') : st ? 'Reminder due: '+stageLabel(st) : 'Upcoming'}</span>`],
+      callBtn(r.phone)+(wa ? `<a class="btn" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : '')+
+      `<button type="button" class="btn" data-act="arrive" data-slot="${esc(r.slotId)}">Driver Came</button>`+coverBtn(r.slotId,'Exchange'));
+  }));
+  h += `<div class="sec"><h2>Alert history today (${alertLog.length})</h2></div>` + (alertLog.length ? `<div class="optrow" style="display:block">${alertLog.slice(0,25).map(a => `${esc(a.at)} · <b>${esc(a.servNo)}</b> · ${esc(stageLabel(a.stage))}`).join('<br>')}</div>` : '<div class="none">No alerts yet</div>');
+  document.getElementById('upcomingView').innerHTML = h;
+}
 
 function tick(){
   document.getElementById('clock').textContent = new Date().toLocaleTimeString();
-  data.forEach(r => {
-    if (absentMap[r.slotId] && absentMap[r.slotId].type === 'Went Back') return;
-    const mins = parseT(r.driverRT);
-    if (mins === null) return;
-    const diffMin = Math.round((nextOccurrence(mins) - new Date())/60000);
-    const alertKey = todayKey()+'|A|'+r.slotId;
-    if (diffMin === 30 && !alerted.has(alertKey)){ alerted.add(alertKey); beep(); }
-  });
-  render(searchEl.value);
+  runAlerts();
+  if (view === 'upcoming') renderUpcoming();
+  else if (view === 'bus'){ if (!dlg.open) renderBusView(); }
+  else if (view === 'abs') renderAbsTab();
+  else if (view === 'absent'){ if (!dlg.open) renderAbsentView(); }
+  else { render(searchEl.value); }
+  renderAbsentCount();
 }
-
-async function loadAbsent(date){
-  try{
-    const res = await fetch(SHEET_URL+'?action=listAbsent&date='+encodeURIComponent(date));
-    if (!res.ok) return;
-    const json = await res.json();
-    Object.keys(absentMap).forEach(k => delete absentMap[k]);
-    (json.rows || []).forEach(r => {
-      const prev = absentMap[r.slotId];
-      // keep the most recent record per slot
-      if (!prev || String(r.savedAt) >= String(prev.savedAt)) absentMap[r.slotId] = r;
-    });
-  }catch(e){ console.warn('Absent list not loaded', e); }
+function renderAbsentCount(){ /* also refreshes the tab badges */
+  const res = analyse(), n = res.absent.filter(x => x.confirmed).length + res.late.length + res.exchanged.length;
+  const nb = res.noBus.length + res.wentBack.length, na = res.absent.filter(x => x.confirmed).length, nw = res.wentBack.length;
+  document.getElementById('vBusN').textContent = nb ? '('+nb+')' : '';
+  document.getElementById('vAbsN').textContent = na ? '('+na+')' : '';
+  document.getElementById('vAbsentN').textContent = n ? '('+n+')' : '';
 }
 
 async function loadSchedule(){
@@ -635,10 +828,7 @@ async function loadSchedule(){
   loadStatus.textContent = 'Loading schedule for '+date+'…';
   emptyMsg.style.display = 'none';
   try{
-    const [res] = await Promise.all([
-      fetch(SHEET_URL+'?action=list&sheet='+encodeURIComponent(date)),
-      loadAbsent(date)
-    ]);
+    const res = await fetch(SHEET_URL+'?action=list&sheet='+encodeURIComponent(date));
     if (!res.ok) throw new Error('HTTP '+res.status);
     const json = await res.json();
     if (json.error && !(json.rows && json.rows.length)) throw new Error(json.error);
@@ -646,6 +836,8 @@ async function loadSchedule(){
     data = rows.map(normalizeRow);
     loadStatus.textContent = data.length ? `Loaded ${data.length} duties for ${date}` : `No rows found in sheet tab “${date}”`;
     tick();
+    await loadArrivals();
+    if (!ready){ await loadAlerts(); ready = true; tick(); }
   }catch(err){
     console.error(err);
     loadStatus.textContent = 'Could not load schedule: '+(err.message || err);
@@ -659,7 +851,8 @@ document.getElementById('enableBtn').addEventListener('click', function(){
   audioCtx.resume();
   this.textContent = 'Alerts On';
   this.classList.add('on');
-  beep();
+  if (window.Notification && Notification.permission === 'default') Notification.requestPermission();
+  beep(); tick();
 });
 document.getElementById('refreshBtn').addEventListener('click', loadSchedule);
 searchEl.addEventListener('input', e => render(e.target.value));
